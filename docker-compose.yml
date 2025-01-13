@@ -1,62 +1,14 @@
 services:
-  backend:
-    build: ./backend
-    ports:
-      - "8000:8000"
+  python:
+    image: python:3.12
+    container_name: python-container
     volumes:
-      - ./backend:/app
-    environment:
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
-    networks:
-      - app-network
+    - ./backend:/backend  
+    # network:
+    #   - app-network
+    command: tail -f /dev/null #contenedor no se detengaa
 
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
-    environment:
-      - REACT_APP_API_URL=http://backend:8000
-      - VARIABLEA={{ VARIABLEA }}
-    networks:
-      - app-network
-
-  postgres:
-    image: postgres:13
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
-    networks:
-      - app-network
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./db/p:/var/lib/postgresql/data
-  
-  mysql:
-    image: mysql:5.7
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-    networks:
-      - app-network
-    volumes:
-      - mysql_data:/var/lib/mysql
-
-  nginx:
-    image: nginx:1.19
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
-
-volumes:
-  postgres_data:
-  mysql_data:
+# networks:
+#   app-network:
+#     driver: bridge
 
